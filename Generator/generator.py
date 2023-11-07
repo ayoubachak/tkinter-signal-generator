@@ -52,24 +52,37 @@ class Generator(Subject):
         return self.p
     def set_phase(self, phase):
         self.p = phase
-
-
-    def vibration(self,t):
+    def get_harmonique(self): 
+        return self.harmonics
+    def set_harmonique(self, harmoniques) : 
+        self.harmonics = harmoniques
+    def vibration(self,t, odd=None):
         # Warning : take care of degrees_to_radians conversion on phase (self.p)
         # if you get degree from your slider, use radians() function from math module to convert
         m,f,p=self.m,self.f,self.p
         harmo=int(self.harmonics)
         sum=0
-        for h in range(1,harmo+1) :
-            sum=sum + (m/h)*sin(2*pi*(f*h)*t)-p
+        if odd is None:
+            for h in range(1,harmo+1) :
+                print("printing all harmonics..")
+                sum=sum + (m/h)*sin(2*pi*(f*h)*t)-p
+        if odd is True:
+            print("printing odd harmonics..")
+            for h in range(1,harmo+1, 2) :
+                sum=sum + (m/h)*sin(2*pi*(f*h)*t)-p
+        if odd is False:
+            print("printing even harmonics..")
+            for h in range(2,harmo+1, 2) :
+                sum=sum + (m/h)*sin(2*pi*(f*h)*t)-p
+
         return sum
-    def generate(self):
+    def generate(self, harm_odd = None):
         print("Generator observers", self.observers)
         print("Generator.generate()")
         del self.signal[0:]
         samples=int(self.samples)
         for t in range(samples+1) :
-            self.signal.append([t/samples,self.vibration(t/samples)])
+            self.signal.append([t/samples,self.vibration(t/samples, odd=harm_odd)])
         self.notify()
         return self.signal
     
