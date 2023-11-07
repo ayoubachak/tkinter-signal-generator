@@ -27,9 +27,21 @@ class Controller :
         print("Generator.gui()")
         self.frame=tk.LabelFrame(self.view.parent,text="X")
         self.var_mag=tk.IntVar()
-        self.var_mag.set(1)
+        self.var_mag.set(self.model.get_magnitude())
+        self.var_freq = tk.IntVar()
+        self.var_freq.set(self.model.get_frequence())
+        self.var_phase = tk.IntVar()
+        self.var_phase.set(self.model.get_phase())
         self.scaleA=tk.Scale(self.frame,variable=self.var_mag,
                              label="Amplitude",
+                             orient="horizontal",length=250,
+                             from_=0,to=5,tickinterval=1)
+        self.scaleF=tk.Scale(self.frame,variable=self.var_freq,
+                             label="Frequence",
+                             orient="horizontal",length=250,
+                             from_=0,to=5,tickinterval=1)
+        self.scaleP=tk.Scale(self.frame,variable=self.var_phase,
+                             label="Phase",
                              orient="horizontal",length=250,
                              from_=0,to=5,tickinterval=1)
 
@@ -39,6 +51,8 @@ class Controller :
         # self.screen.pack(fill="both",padx=10,pady=20)
         self.frame.pack()
         self.scaleA.pack()
+        self.scaleF.pack()
+        self.scaleP.pack()
 
 
 
@@ -53,12 +67,27 @@ class Controller :
         print("Generator.actions_binding()")
         self.view.screen.bind("<Configure>",self.resize)
         self.scaleA.bind("<B1-Motion>",self.on_magnitude_action)
+        self.scaleF.bind("<B1-Motion>",self.on_frequence_action)
+        self.scaleP.bind("<B1-Motion>",self.on_phase_action)
+
 
     # callbacks (on_<name>_action(...) )
     def on_magnitude_action(self, event):
         print("Generator.on_magnitude_action()")
-        if  self.model.m != self.var_mag.get() :
-            self.model.m=self.var_mag.get()
+        if  self.model.get_magnitude() != self.var_mag.get() :
+            self.model.set_magnitude(self.var_mag.get())
+            self.model.generate()
+    # callbacks (on_<name>_action(...) )
+    def on_frequence_action(self, event):
+        print("Generator.on_frequence_action()")
+        if  self.model.get_frequence() != self.var_freq.get() :
+            self.model.set_frequence(self.var_freq.get())
+            self.model.generate()
+    # callbacks (on_<name>_action(...) )
+    def on_phase_action(self, event):
+        print("Generator.on_phase_action()")
+        if  self.model.get_phase() != self.var_phase.get() :
+            self.model.set_phase(self.var_phase.get())
             self.model.generate()
     
     def resize(self,event):

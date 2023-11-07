@@ -27,7 +27,6 @@ class Screen(Observer) :
         self.width,self.height=width,height
         self.units=1
         self.tiles = 2
-        self.signal = []
         self.gui()
 
     def gui(self) :

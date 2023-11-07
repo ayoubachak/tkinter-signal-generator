@@ -41,9 +41,18 @@ class Generator(Subject):
     def set_signal(self,signal) :
         self.signal=signal
     def get_magnitude(self) :
-        pass
+        return self.m
     def set_magnitude(self,magnitude) :
-        pass
+        self.m = magnitude
+    def get_frequence(self):
+        return self.f
+    def set_frequence(self, frequence):
+        self.f = frequence
+    def get_phase(self):
+        return self.p
+    def set_phase(self, phase):
+        self.p = phase
+
 
     def vibration(self,t):
         # Warning : take care of degrees_to_radians conversion on phase (self.p)
