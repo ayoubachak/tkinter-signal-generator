@@ -4,10 +4,13 @@
 *harmonicsScale.foreground: darkred
 
 *harmonicsFrame.foreground: darkblue
-*harmonicsAllRadioButton.background: darkblue
+*harmonicsAllRadioButton.background: gray
 *harmonicsAllRadioButton.foreground: orange
-*harmonicsOddRadioButton.background: darkblue
+*harmonicsOddRadioButton.background: gray
 *harmonicsOddRadioButton.foreground: orange
+*harmonicsEvenRadioButton.background: gray
+*harmonicsEvenRadioButton.foreground: orange
+
 
 *xy_Frame.foreground: darkblue
 *xCheckButton.background: darkblue

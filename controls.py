@@ -13,9 +13,6 @@ from tkinter import messagebox
 from tkinter import colorchooser
 from tkinter.filedialog import asksaveasfile
 
-# ╔════════════════════════════════════════════════════╤═══════════════════════╗
-# ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│    Signal Controls    ║
-# ╚════════════════════════════════════════════════════╧═══════════════════════╝
 class SignalControls(tk.LabelFrame, Subject, Observer):
     def __init__(self, parent, model, *args, **kwargs):
         Subject.__init__(self)
@@ -39,28 +36,6 @@ class SignalControls(tk.LabelFrame, Subject, Observer):
         self.update(generator)
 
     def create_controls(self):
-        harmonics_frame = tk.LabelFrame(self, name="harmonicsFrame", text="Harmonics")
-        self.harmo_odd_even_var = tk.IntVar()
-        btn = tk.Radiobutton(
-            harmonics_frame,
-            name="harmonicsAllRadioButton",
-            text="All",
-            variable=self.harmo_odd_even_var,
-            value=1,
-            command=self.cb_change
-        )
-        btn.select()
-        btn.pack(side="left")
-        btn = tk.Radiobutton(
-            harmonics_frame,
-            name="harmonicsOddRadioButton",
-            text="Odd",
-            variable=self.harmo_odd_even_var,
-            value=2,
-            command=self.cb_change
-        )
-        btn.pack(side="left")
-        harmonics_frame.pack()
 
         self.mag_var = tk.DoubleVar()
         self.scale_mag = tk.Scale(
@@ -144,6 +119,43 @@ class SignalControls(tk.LabelFrame, Subject, Observer):
         )
         self.scale_samples.pack()
 
+        harmonics_frame = tk.LabelFrame(self, name="harmonicsFrame", text="Harmonics")
+        self.harmo_odd_even_var = tk.IntVar()
+        # All
+        all_btn = tk.Radiobutton(
+            harmonics_frame,
+            name="harmonicsAllRadioButton",
+            text="All",
+            variable=self.harmo_odd_even_var,
+            value=0,
+            command=self.cb_change
+        )
+        all_btn.select()
+        all_btn.pack(side="left")
+        # Odd
+        odd_btn = tk.Radiobutton(
+            harmonics_frame,
+            name="harmonicsOddRadioButton",
+            text="Odd",
+            variable=self.harmo_odd_even_var,
+            value=1,
+            command=self.cb_change
+        )
+        odd_btn.pack(side="left")
+        # Even
+        even_btn = tk.Radiobutton(
+            harmonics_frame,
+            name="harmonicsEvenRadioButton",
+            text="Even",
+            variable=self.harmo_odd_even_var,
+            value=2,
+            command=self.cb_change
+        )
+        even_btn.pack()
+
+        harmonics_frame.pack()
+
+
     def update(self, generator):
         self.config(text=generator.get_name())
         self.harmo_odd_even_var.set(generator.harmo_odd_even)
@@ -155,10 +167,7 @@ class SignalControls(tk.LabelFrame, Subject, Observer):
 
     def cb_change(self, event=None):
         self.notify()                                                                                      
-        
-# ╭────────────────────╮
-# │ End Signal Controls├───────────────────────────────────────────────────────────────────
-# ╰────────────────────╯
+
 
 class Controller(Observer, Subject):
     def __init__(self, parent, screen, models):
@@ -172,10 +181,6 @@ class Controller(Observer, Subject):
             self.parameters_frames.append(parameters_frame)
             parameters_frame.attach(self)
         self.create_controls()
-
-# ╔════════════════════════════════════════════════════╤═══════════════════════╗
-# ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│        Menu Bar       ║
-# ╚════════════════════════════════════════════════════╧═══════════════════════╝
         menu = tk.Menu(parent)
         parent.config(menu=menu)
 
@@ -183,7 +188,6 @@ class Controller(Observer, Subject):
         fileMenu.add_command(label="Open",command=self.open)
         fileMenu.add_command(label="Save JSON",command=self.save)
         fileMenu.add_command(label="Save Image",command=self.save_img)
-        #fileMenu.add_command(label="Exit Instantly", command=self.close_app)
         fileMenu.add_command(label="Exit", command=self.close_app_ask)
         menu.add_cascade(label="File", menu=fileMenu)
 
@@ -191,15 +195,7 @@ class Controller(Observer, Subject):
         fileMenu.add_command(label="About Us ...",command=self.about_us)
         fileMenu.add_command(label="About Tk ...",command=self.about_tk)
         fileMenu.add_command(label="About Python ...",command=self.about_py)
-        fileMenu.add_command(label="About our Application ...",command=self.about_app)
         menu.add_cascade(label="Help", menu=fileMenu)
-
-        fileMenu = tk.Menu(menu)
-        fileMenu.add_command(label="Background",command=self.color_bg)
-        fileMenu.add_command(label="Curves",command=self.color_curves)
-        # fileMenu.add_command(label="Scales",command=self.color_scales)
-        # fileMenu.add_command(label="Check-Boxes",command=self.color_checkboxes)
-        menu.add_cascade(label="Color Picker", menu=fileMenu)
 
 
     def open(self):
@@ -260,8 +256,6 @@ class Controller(Observer, Subject):
         self.screen.save_as_png(self.screen.canvas,filename)
         messagebox.showinfo("J&H Oscilloscope","Your image has been saved!")
 
-    def close_app(self):
-        exit()
 
     def close_app_ask(self):
         res = messagebox.askyesno("J&H Oscilloscope", 'Do you want to exit?') 
@@ -274,28 +268,14 @@ class Controller(Observer, Subject):
             messagebox.showerror('error', 'something went wrong!')
 
     def about_us(self):
-         messagebox.showinfo('About Us', "=->> Project Creators <<-=\nJohnny Saghbini & Hassan Serhan\n\n\nAll Rights Reserved © 2022")
+         messagebox.showinfo('About Us', "Realiser par : \n\n- Bahlak Mohamed Zahed \n- Achak Ayoub")
 
     def about_tk(self):
         messagebox.showinfo('About TkInter', "Tkinter 'Tool Kit Interface' est la bibliothèque graphique libre d'origine pour le langage Python, permettant la création d'interfaces graphiques. Elle vient d'une adaptation de la bibliothèque graphique Tk écrite pour Tcl. ")
     
     def about_py(self):
-        messagebox.showinfo('About Python', "Python est un langage de programmation interprété, multi-paradigme et multiplateformes. Il favorise la programmation impérative structurée, fonctionnelle et orientée objet. Il est doté d'un typage dynamique fort, d'une gestion automatique de la mémoire par ramasse-miettes et d'un système de gestion d'exceptions.Le langage Python fonctionne sur la plupart des plates-formes informatiques, des smartphones aux ordinateurs centraux5, de Windows à Unix avec notamment GNU/Linux en passant par macOS, ou encore Android, iOS, et peut aussi être traduit en Java ou .NET. Il est conçu pour optimiser la productivité des programmeurs en offrant des outils de haut niveau et une syntaxe simple à utiliser. ")
+        messagebox.showinfo('About Python', "Python est un langage de programmation interprété, multiparadigme et multiplateformes. Il favorise la programmation impérative structurée, fonctionnelle et orientée objet.")
 
-    def about_app(self):
-        messagebox.showinfo("About our Application","Pour lancer ce programme et eviter les erreurs, veuillez installer les deux libraries WebColors et SciPy en utilisant les commandes suivantes:\n1. pip install webcolors\n2. pip install scipy")
-
-    def color_bg(self):
-       # curves = colorchooser.askcolor(title ="Choose a color for your curves")
-        #SignalControls.scale_harmonics.config(fg=curves[1])
-        self.screen.color_of_background()
-        #color_me.config(fg=curves[1])
-
-    def color_curves(self):
-       # curves = colorchooser.askcolor(title ="Choose a color for your curves")
-        #SignalControls.scale_harmonics.config(fg=curves[1])
-        self.screen.color_of_curves()
-        #color_me.config(fg=curves[1])
 
     def color_scales(self):
         scales = colorchooser.askcolor(title ="Choose a color for your scales")
@@ -303,38 +283,12 @@ class Controller(Observer, Subject):
 
     def color_checkboxes(self):
         checkboxes = colorchooser.askcolor(title ="Choose a color for your checkboxes")
-        #color_me.config(fg=checkboxes[1])
-# ╭──────────────╮
-# │ End Menu Bar ├───────────────────────────────────────────────────────────────────
-# ╰──────────────╯
 
     def __repr__(self):
         return "Controller()"
 
     def create_controls(self):
-        xy_frame = tk.LabelFrame(self.parent, name="xyFrame", text="X-Y")
-        self.x_check_var = tk.IntVar()
-        btn = tk.Checkbutton(
-            xy_frame,
-            name="xCheckButton",
-            text="X",
-            variable=self.x_check_var,
-            command=self.cb_x_change
-        )
-        btn.select()
-        btn.pack(side="left")
-        self.y_check_var = tk.IntVar()
-        btn = tk.Checkbutton(
-            xy_frame,
-            name="yCheckButton",
-            text="Y",
-            variable=self.y_check_var,
-            command=self.cb_y_change
-        )
-        btn.select()
-        btn.pack(side="left")
 
-        xy_frame.pack()
         self.screen.canvas.pack(expand=1,fill="both",padx=6)
         for parameters_frame in self.parameters_frames:
             parameters_frame.pack(side="left")
@@ -349,32 +303,3 @@ class Controller(Observer, Subject):
         generator.harmo_odd_even = parameters_frame.harmo_odd_even_var.get()
         generator.generate()
 
-    def cb_x_change(self):
-        generator = None
-        for gen in self.models:
-            if gen.get_name() == 'X':
-                generator = gen
-                break
-
-        if generator is None:
-            return
-        
-        if self.x_check_var.get():
-            self.screen.add_generator(generator)
-        else:
-            self.screen.remove_generator(generator)
-
-    def cb_y_change(self):
-        generator = None
-        for gen in self.models:
-            if gen.get_name() == 'Y':
-                generator = gen
-                break
-
-        if generator is None:
-            return
-        
-        if self.y_check_var.get():
-            self.screen.add_generator(generator)
-        else:
-            self.screen.remove_generator(generator)

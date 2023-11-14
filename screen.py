@@ -154,7 +154,7 @@ class Screen(Observer):
     def add_generator(self, generator):
         self.generators.append(generator)
         generator.attach(self)
-        self.animate_spot(generator.get_name(), samples_per_sec=70)
+        self.animate_spot(generator.get_name(), samples_per_sec=50)
         self.update(generator)
 
     def remove_generator(self, generator):

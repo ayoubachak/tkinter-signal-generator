@@ -29,7 +29,6 @@ class Generator(Subject) :
         Subject.__init__(self)
         self.name=name
         self.mag,self.freq,self.phase,self.harmonics=mag,freq,phase,harmonics
-        self.signal1=[]
         self.signal = []
         self.harmo_odd_even=1
         self.samples=100
@@ -39,8 +38,6 @@ class Generator(Subject) :
         return "<Screen(mag:{}, freq:{}, phase:{}, harmonics :{})>".format(self.mag,self.freq,self.phase,self.harmonics)
     def get_signal(self):
         return self.signal
-    def get_signal1(self):
-        return self.signal1
     def get_canvas(self) :
         return self.canvas
     def get_name(self):
@@ -73,22 +70,20 @@ class Generator(Subject) :
         p_to_r=radians(p)
         sum=a*sin(2*pi*f*t)-p_to_r
         for h in range(2,harmonics+1) :
-            if  self.harmo_odd_even==1  :
+            if  self.harmo_odd_even==0  :
                 sum=sum+(a*1.0/h)*sin(2*pi*(f*h)*t-p_to_r)
-            elif  self.harmo_odd_even==2 and h%2==1 :
+            elif  self.harmo_odd_even==1 and h%2==1 :
+                sum=sum+(a*1.0/h)*sin(2*pi*(f*h)*t-p_to_r)
+            elif  self.harmo_odd_even==2 and h%2==0 :
                 sum=sum+(a*1.0/h)*sin(2*pi*(f*h)*t-p_to_r)
         return sum
     
     def generate(self,period=2):
         del self.signal[0:]
-        del self.signal1[0:]
         echantillons=range(int(self.samples)+1)
-        echantillons1=range(int(self.samples)+1)
         Tech=period/self.samples
         for t in echantillons :
             self.signal.append([t*Tech,self.vibration(t*Tech)])
-        for t1 in echantillons1 :
-            self.signal1.append([t1*Tech,self.vibration(t1*Tech)])
         self.notify()
         return self.signal
 
